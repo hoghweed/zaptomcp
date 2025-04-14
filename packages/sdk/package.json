@@ -1,0 +1,74 @@
+{
+  "name": "@zaptomcp/sdk",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/cjs/server/mcp-server.js",
+  "module": "dist/esm/server/mcp-server.js",
+  "types": "dist/esm/server/mcp-server.d.ts",
+  "type": "module",
+  "exports": {
+    "./transports": {
+      "import": "./dist/esm/transports/transport.js",
+      "require": "./dist/cjs/transports/transport.js",
+      "types": "./dist/esm/transports/transport.d.ts"
+    },
+    "./server": {
+      "import": "./dist/esm/server/server.js",
+      "require": "./dist/cjs/server/server.js",
+      "types": "./dist/esm/server/server.d.ts"
+    },
+    "./server/mcp-server": {
+      "import": "./dist/esm/server/mcp-server.js",
+      "require": "./dist/cjs/server/mcp-server.js",
+      "types": "./dist/esm/server/mcp-server.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/esm/*"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "pnpm lint && rimraf ./dist",
+    "build": "rimraf ./dist && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json && cp cjs-package.json dist/cjs/package.json",
+    "validate-exports": "validate-package-exports --check --verify --info",
+    "postbuild": "npm run validate-exports",
+    "clean": "rm -rf .turbo node_modules",
+    "dev": "run-p dev:start typecheck",
+    "dev:start": "tsx watch --inspect --env-file=.env src/server.ts",
+    "lint": "biome lint --write ./src",
+    "format": "biome format --write ./src ",
+    "start": "node --env-file=.env --enable-source-maps dist/server.js",
+    "typecheck": "tsc -p ./tsconfig.json --noEmit"
+  },
+  "keywords": [],
+  "author": "Manuel S. Martone <manuel.martone@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/content-type": "^1.1.8",
+    "@types/node": "^22.14.0",
+    "fastify-tsconfig": "^3.0.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^6.0.1",
+    "tsc-files": "^1.1.4",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3",
+    "validate-package-exports": "^0.9.0"
+  },
+  "packageManager": "pnpm@10.8.1",
+  "dependencies": {
+    "content-type": "^1.0.5",
+    "fastify": "^5.3.0",
+    "raw-body": "^3.0.0",
+    "zod": "^3.24.2",
+    "zod-to-json-schema": "^3.24.5"
+  }
+}

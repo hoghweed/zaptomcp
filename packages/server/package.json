@@ -1,0 +1,46 @@
+{
+  "name": "@zaptomcp/server",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "typescript": "./src/ZapMCP.ts",
+      "import": "./dist/ZapMCP.js",
+      "require": "./dist/ZapMCP.js"
+    }
+  },
+  "scripts": {
+    "prebuild": "pnpm lint && rimraf ./dist",
+    "build": "tsc -p ./tsconfig.json",
+    "clean": "rm -rf .turbo node_modules",
+    "dev": "run-p dev:start typecheck",
+    "dev:start": "tsx watch --inspect --env-file=.env src/server.ts",
+    "lint": "biome lint ./src",
+    "format": "biome format ./src ",
+    "start": "node --env-file=.env --enable-source-maps dist/server.js",
+    "typecheck": "tsc -p ./tsconfig.json --noEmit"
+  },
+  "keywords": [],
+  "author": "Manuel S. Martone <manuel.martone@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "^22.14.0",
+    "fastify-tsconfig": "^3.0.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^6.0.1",
+    "tsc-files": "^1.1.4",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "pnpm@10.8.1",
+  "dependencies": {
+    "@zaptomcp/sdk": "workspace:^",
+    "zod": "^3.24.2"
+  }
+}

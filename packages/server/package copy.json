@@ -1,0 +1,103 @@
+{
+  "name": "@docmind/server",
+  "version": "0.1.9",
+  "description": "Docmind is a AI driven dcoument intelligence demo solution to show AI data techniques put in practice over documents",
+  "type": "module",
+  "main": "./dist/server.js",
+  "types": "./dist/server.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "typescript": "./src/server.ts",
+      "import": "./dist/server.js",
+      "require": "./dist/server.js"
+    }
+  },
+  "scripts": {
+    "prebuild": "pnpm lint && rimraf ./dist",
+    "build": "tsc -p ./tsconfig.json",
+    "clean": "rm -rf .turbo node_modules",
+    "dev": "run-p dev:start typecheck",
+    "dev:start": "tsx watch --inspect --env-file=.env src/server.ts",
+    "lint": "biome lint ./src",
+    "format": "biome format ./src ",
+    "start": "node --env-file=.env --enable-source-maps dist/server.js",
+    "typecheck": "tsc -p ./tsconfig.json --noEmit",
+    "migration:create": "NODE_OPTIONS='--import tsx' mikro-orm migration:create --config ./src/model/orm.config.ts -- --env-file=.env",
+    "migration:reset": "NODE_OPTIONS='--import tsx' mikro-orm migration:fresh --config ./src/model/orm.config.ts --seed -- --env-file=.env",
+    "migration:apply": "NODE_OPTIONS='--import tsx' mikro-orm migration:up --config ./src/model/orm.config.ts -- --env-file=.env",
+    "schema:fresh": "NODE_OPTIONS='--import tsx' mikro-orm schema:fresh --run --config ./src/model/orm.config.ts -- --env-file=.env"
+  },
+  "keywords": [],
+  "author": "Manuel S. Martone <manuel.martone@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@ducktors/storagebus-abstract": "^0.10.3",
+    "@ducktors/storagebus-local": "^0.12.3",
+    "@fastify/autoload": "^6.3.0",
+    "@fastify/cors": "^10.0.2",
+    "@fastify/multipart": "^9.0.3",
+    "@fastify/swagger": "^9.4.0",
+    "@fastify/swagger-ui": "^5.2.2",
+    "@fastify/websocket": "^11.0.2",
+    "@huggingface/transformers": "^3.4.2",
+    "@langchain/community": "^0.3.39",
+    "@langchain/core": "^0.3.43",
+    "@langchain/ollama": "^0.2.0",
+    "@mikro-orm/core": "^6.4.12",
+    "@mikro-orm/migrations": "^6.4.12",
+    "@mikro-orm/postgresql": "^6.4.12",
+    "@mikro-orm/reflection": "^6.4.12",
+    "@mikro-orm/seeder": "6.4.12",
+    "@moleculer/channels": "^0.1.8",
+    "@t3-oss/env-core": "^0.12.0",
+    "@types/figlet": "^1.7.0",
+    "@types/multer": "^1.4.12",
+    "@types/natural": "^5.1.5",
+    "close-with-grace": "^2.2.0",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.2.2",
+    "fastify-moleculer": "^0.1.4",
+    "fastify-plugin": "^5.0.1",
+    "fastify-type-provider-zod": "^4.0.2",
+    "figlet": "^1.8.0",
+    "glob": "^11.0.1",
+    "hyperid": "^3.3.0",
+    "ioredis": "^5.6.0",
+    "langchain": "^0.3.20",
+    "mammoth": "^1.9.0",
+    "moleculer": "^0.14.35",
+    "nanoid": "^5.1.5",
+    "officeparser": "^5.1.1",
+    "pdf-parse": "^1.1.1",
+    "pg-boss": "^10.2.0",
+    "pino-pretty": "^13.0.0",
+    "tslib": "^2.8.1",
+    "undici": "^7.7.0",
+    "ws": "^8.18.1",
+    "zod": "^3.24.2",
+    "zod-to-json-schema": "^3.24.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@mikro-orm/cli": "6.4.12",
+    "@types/node": "^22.14.0",
+    "@types/ws": "^8.18.1",
+    "fastify-tsconfig": "^3.0.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^6.0.1",
+    "tsc-files": "^1.1.4",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/model/orm.config.ts",
+      "./dist/model/orm.config.js"
+    ]
+  }
+}
