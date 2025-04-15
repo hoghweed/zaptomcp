@@ -7,20 +7,45 @@
   "types": "dist/esm/server/mcp-server.d.ts",
   "type": "module",
   "exports": {
+    ".": {
+      "types": "./dist/esm/server/mcp-server.d.ts",
+      "import": "./dist/esm/server/mcp-server.js",
+      "require": "./dist/cjs/server/mcp-server.js"
+    },
     "./transports": {
+      "types": "./dist/esm/transports/transport.d.ts",
       "import": "./dist/esm/transports/transport.js",
-      "require": "./dist/cjs/transports/transport.js",
-      "types": "./dist/esm/transports/transport.d.ts"
+      "require": "./dist/cjs/transports/transport.js"
+    },
+    "./transports/in-memory": {
+      "types": "./dist/esm/transports/in-memory.d.ts",
+      "import": "./dist/esm/transports/in-memory.js",
+      "require": "./dist/cjs/transports/in-memory.js"
+    },
+    "./transports/sse": {
+      "types": "./dist/esm/transports/sse.d.ts",
+      "import": "./dist/esm/transports/sse.js",
+      "require": "./dist/cjs/transports/sse.js"
+    },
+    "./transports/stdio": {
+      "types": "./dist/esm/transports/stdio.d.ts",
+      "import": "./dist/esm/transports/stdio.js",
+      "require": "./dist/cjs/transports/stdio.js"
+    },
+    "./transports/streamable-http": {
+      "types": "./dist/esm/transports/streamable-http.d.ts",
+      "import": "./dist/esm/transports/streamable-http.js",
+      "require": "./dist/cjs/transports/streamable-http.js"
     },
     "./server": {
+      "types": "./dist/esm/server/server.d.ts",
       "import": "./dist/esm/server/server.js",
-      "require": "./dist/cjs/server/server.js",
-      "types": "./dist/esm/server/server.d.ts"
+      "require": "./dist/cjs/server/server.js"
     },
     "./server/mcp-server": {
+      "types": "./dist/esm/server/mcp-server.d.ts",
       "import": "./dist/esm/server/mcp-server.js",
-      "require": "./dist/cjs/server/mcp-server.js",
-      "types": "./dist/esm/server/mcp-server.d.ts"
+      "require": "./dist/cjs/server/mcp-server.js"
     },
     "./package.json": "./package.json"
   },
@@ -45,6 +70,7 @@
     "lint": "biome lint --write ./src",
     "format": "biome format --write ./src ",
     "start": "node --env-file=.env --enable-source-maps dist/server.js",
+    "test": "vitest run --config ./vitest.config.js",
     "typecheck": "tsc -p ./tsconfig.json --noEmit"
   },
   "keywords": [],
@@ -61,7 +87,8 @@
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",
-    "validate-package-exports": "^0.9.0"
+    "validate-package-exports": "^0.9.0",
+    "vitest": "^3.1.1"
   },
   "packageManager": "pnpm@10.8.1",
   "dependencies": {

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { Transport } from "../transports/transport.js";
+import type { Transport } from "./transport.js";
 import { type JSONRPCMessage, JSONRPCMessageSchema } from "../types.js";
 import getRawBody from "raw-body";
 import contentType from "content-type";

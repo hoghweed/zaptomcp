@@ -24,14 +24,6 @@
         "lib": [
             "ESNext"
         ],
-        "paths": {
-            "@/*": [
-                "./src/*"
-            ],
-            "@tests/*": [
-                "./tests/*"
-            ]
-        },
     },
     "include": [
         "**/*.ts"

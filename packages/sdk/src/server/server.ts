@@ -78,8 +78,8 @@ export class Server<
   private _clientCapabilities?: ClientCapabilities;
   private _clientVersion?: Implementation;
   private _capabilities: ServerCapabilities;
-  private _instructions?: string;
-
+  private _instructions?: string | undefined;
+  private _serverInfo: Implementation;
   /**
    * Callback for when initialization has fully completed (i.e., the client has sent an `initialized` notification).
    */
@@ -89,10 +89,11 @@ export class Server<
    * Initializes this server with the given name and version information.
    */
   constructor(
-    private _serverInfo: Implementation,
+    serverInfo: Implementation,
     options?: ServerOptions,
   ) {
     super(options);
+    this._serverInfo = serverInfo;
     this._capabilities = options?.capabilities ?? {};
     this._instructions = options?.instructions;
 

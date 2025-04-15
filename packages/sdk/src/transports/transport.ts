@@ -50,5 +50,5 @@ export interface Transport {
   /**
    * The session ID generated for this connection.
    */
-  sessionId?: string;
+  sessionId?: string | undefined;
 }

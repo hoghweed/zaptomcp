@@ -114,7 +114,7 @@ export type RequestHandlerExtra<
   /**
    * The session ID from the transport, if available.
    */
-  sessionId?: string;
+  sessionId?: string | undefined;
 
   /**
    * Sends a notification that relates to the current request being handled.
@@ -142,7 +142,7 @@ type TimeoutInfo = {
   timeoutId: ReturnType<typeof setTimeout>;
   startTime: number;
   timeout: number;
-  maxTotalTimeout?: number;
+  maxTotalTimeout?: number | undefined;
   resetTimeoutOnProgress: boolean;
   onTimeout: () => void;
 };

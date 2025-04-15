@@ -815,10 +815,23 @@ export type CompleteResourceTemplateCallback = (
  */
 export class ResourceTemplate {
   private _uriTemplate: UriTemplate;
+  private _callbacks: {
+    /**
+     * A callback to list all resources matching this template. This is required to specified, even if `undefined`, to avoid accidentally forgetting resource listing.
+     */
+    list: ListResourcesCallback | undefined;
+
+    /**
+     * An optional callback to autocomplete variables within the URI template. Useful for clients and users to discover possible values.
+     */
+    complete?: {
+      [variable: string]: CompleteResourceTemplateCallback;
+    };
+  };
 
   constructor(
     uriTemplate: string | UriTemplate,
-    private _callbacks: {
+    callbacks: {
       /**
        * A callback to list all resources matching this template. This is required to specified, even if `undefined`, to avoid accidentally forgetting resource listing.
        */
@@ -832,6 +845,7 @@ export class ResourceTemplate {
       };
     },
   ) {
+    this._callbacks = callbacks;
     this._uriTemplate =
       typeof uriTemplate === "string"
         ? new UriTemplate(uriTemplate)
@@ -878,8 +892,8 @@ export type ToolCallback<Args extends undefined | ZodRawShape = undefined> =
   ) => CallToolResult | Promise<CallToolResult>;
 
 export type RegisteredTool = {
-  description?: string;
-  inputSchema?: AnyZodObject;
+  description?: string | undefined;
+  inputSchema?: AnyZodObject | undefined;
   callback: ToolCallback<undefined | ZodRawShape>;
   enabled: boolean;
   enable(): void;
@@ -920,7 +934,7 @@ export type ReadResourceCallback = (
 
 export type RegisteredResource = {
   name: string;
-  metadata?: ResourceMetadata;
+  metadata?: ResourceMetadata | undefined;
   readCallback: ReadResourceCallback;
   enabled: boolean;
   enable(): void;
@@ -946,7 +960,7 @@ export type ReadResourceTemplateCallback = (
 
 export type RegisteredResourceTemplate = {
   resourceTemplate: ResourceTemplate;
-  metadata?: ResourceMetadata;
+  metadata?: ResourceMetadata | undefined;
   readCallback: ReadResourceTemplateCallback;
   enabled: boolean;
   enable(): void;
@@ -979,8 +993,8 @@ export type PromptCallback<
   ) => GetPromptResult | Promise<GetPromptResult>;
 
 export type RegisteredPrompt = {
-  description?: string;
-  argsSchema?: ZodObject<PromptArgsRawShape>;
+  description?: string | undefined;
+  argsSchema?: ZodObject<PromptArgsRawShape> | undefined;
   callback: PromptCallback<undefined | PromptArgsRawShape>;
   enabled: boolean;
   enable(): void;

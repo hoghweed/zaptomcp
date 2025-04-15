@@ -21,7 +21,7 @@ export interface CompletableDef<T extends ZodTypeAny = ZodTypeAny>
   extends ZodTypeDef {
   type: T;
   complete: CompleteCallback<T>;
-  typeName: McpZodTypeKind.Completable;
+  typeName: typeof McpZodTypeKind.Completable;
 }
 
 export class Completable<T extends ZodTypeAny> extends ZodType<
@@ -53,7 +53,7 @@ export class Completable<T extends ZodTypeAny> extends ZodType<
       type,
       typeName: McpZodTypeKind.Completable,
       complete: params.complete,
-      ...processCreateParams(params),
+      ...(processCreateParams(params) as { errorMap?: ZodErrorMap; description?: string })
     });
   };
 }
