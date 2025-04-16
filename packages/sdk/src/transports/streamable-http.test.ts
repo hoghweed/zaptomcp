@@ -1,4 +1,4 @@
-import { createServer, type Server, IncomingMessage, ServerResponse } from "node:http";
+import { createServer, type Server, type IncomingMessage, type ServerResponse } from "node:http";
 import type { AddressInfo } from "node:net";
 import { randomUUID } from "node:crypto";
 import { type EventStore, StreamableHTTPServerTransport, type EventId, type StreamId } from "./streamable-http.js";
@@ -114,7 +114,7 @@ const TEST_MESSAGES = {
  */
 async function readSSEEvent(response: Response): Promise<string> {
   const reader = response.body?.getReader();
-  const { value } = await reader!.read();
+  const { value } = await reader?.read() ?? { value: new Uint8Array() };
   return new TextDecoder().decode(value);
 }
 
@@ -240,7 +240,7 @@ describe("StreamableHTTPServerTransport", () => {
     const dataLine = eventLines.find(line => line.startsWith("data:"));
     expect(dataLine).toBeDefined();
 
-    const eventData = JSON.parse(dataLine!.substring(5));
+    const eventData = JSON.parse(dataLine?.substring(5) ?? '{}');
     expect(eventData).toMatchObject({
       jsonrpc: "2.0",
       result: expect.objectContaining({
@@ -278,7 +278,7 @@ describe("StreamableHTTPServerTransport", () => {
     const dataLine = eventLines.find(line => line.startsWith("data:"));
     expect(dataLine).toBeDefined();
 
-    const eventData = JSON.parse(dataLine!.substring(5));
+    const eventData = JSON.parse(dataLine?.substring(5) ?? '{}');
     expect(eventData).toMatchObject({
       jsonrpc: "2.0",
       result: {
@@ -348,7 +348,7 @@ describe("StreamableHTTPServerTransport", () => {
     const dataLine = eventLines.find(line => line.startsWith("data:"));
     expect(dataLine).toBeDefined();
 
-    const eventData = JSON.parse(dataLine!.substring(5));
+    const eventData = JSON.parse(dataLine?.substring(5) ?? '{}');
     expect(eventData).toMatchObject({
       jsonrpc: "2.0",
       method: "notifications/message",
@@ -381,7 +381,10 @@ describe("StreamableHTTPServerTransport", () => {
     // Just send one and verify it comes through - then the stream should stay open
     await transport.send(notification1);
 
-    const { value, done } = await reader!.read();
+    if (!reader) {
+      throw new Error('Reader is undefined');
+    }
+    const { value, done } = await reader.read();
     const text = new TextDecoder().decode(value);
     expect(text).toContain("First notification");
     expect(done).toBe(false);  // Stream should still be open
@@ -500,7 +503,10 @@ describe("StreamableHTTPServerTransport", () => {
     const reader = response.body?.getReader();
 
     // The responses may come in any order or together in one chunk
-    const { value } = await reader!.read();
+    if (!reader) {
+      throw new Error('Reader is undefined');
+    }
+    const { value } = await reader.read();
     const text = new TextDecoder().decode(value);
 
     // Check that both responses were sent on the same stream
@@ -598,12 +604,18 @@ describe("StreamableHTTPServerTransport", () => {
     const reader2 = response2.body?.getReader();
 
     // Read responses from each stream (requires each receives its specific response)
-    const { value: value1 } = await reader1!.read();
+    if (!reader1) {
+      throw new Error('Reader1 is undefined');
+    }
+    const { value: value1 } = await reader1.read();
     const text1 = new TextDecoder().decode(value1);
     expect(text1).toContain('"id":"req-1"');
     expect(text1).toContain('"tools"');  // tools/list result
 
-    const { value: value2 } = await reader2!.read();
+    if (!reader2) {
+      throw new Error('Reader2 is undefined');
+    }
+    const { value: value2 } = await reader2.read();
     const text2 = new TextDecoder().decode(value2);
     expect(text2).toContain('"id":"req-2"');
     expect(text2).toContain('Hello, Connection2');  // tools/call result
@@ -830,7 +842,10 @@ describe("StreamableHTTPServerTransport with pre-parsed body", () => {
     expect(response.headers.get("content-type")).toBe("text/event-stream");
 
     const reader = response.body?.getReader();
-    const { value } = await reader!.read();
+    if (!reader) {
+      throw new Error('Reader is undefined');
+    }
+    const { value } = await reader.read();
     const text = new TextDecoder().decode(value);
 
     // Verify the response used the pre-parsed body
@@ -857,7 +872,10 @@ describe("StreamableHTTPServerTransport with pre-parsed body", () => {
     expect(response.status).toBe(200);
 
     const reader = response.body?.getReader();
-    const { value } = await reader!.read();
+    if (!reader) {
+      throw new Error('Reader is undefined');
+    }
+    const { value } = await reader.read();
     const text = new TextDecoder().decode(value);
 
     expect(text).toContain('"id":"batch-1"');
@@ -892,7 +910,10 @@ describe("StreamableHTTPServerTransport with pre-parsed body", () => {
     expect(response.status).toBe(200);
 
     const reader = response.body?.getReader();
-    const { value } = await reader!.read();
+    if (!reader) {
+      throw new Error('Reader is undefined');
+    }
+    const { value } = await reader.read();
     const text = new TextDecoder().decode(value);
 
     // Should have processed the pre-parsed body
@@ -948,7 +969,8 @@ describe("StreamableHTTPServerTransport with resumability", () => {
     mcpServer = result.mcpServer;
 
     // Verify resumability is enabled on the transport
-    expect((transport)['_eventStore']).toBeDefined();
+    // biome-ignore lint/complexity/useLiteralKeys: <explanation>
+        expect((transport)['_eventStore']).toBeDefined();
 
     // Initialize the server
     const initResponse = await sendPostRequest(baseUrl, TEST_MESSAGES.initialize);
@@ -986,7 +1008,10 @@ describe("StreamableHTTPServerTransport with resumability", () => {
 
     // Read from the stream and verify we got the notification with an event ID
     const reader = sseResponse.body?.getReader();
-    const { value } = await reader!.read();
+    if (!reader) {
+      throw new Error('Reader is undefined');
+    }
+    const { value } = await reader.read();
     const text = new TextDecoder().decode(value);
 
     // The response should contain an event ID
@@ -998,7 +1023,7 @@ describe("StreamableHTTPServerTransport with resumability", () => {
     expect(idMatch).toBeTruthy();
 
     // Verify the event was stored
-    const eventId = idMatch![1];
+    const eventId = idMatch?.[1];
     expect(storedEvents.has(eventId as string)).toBe(true);
     const storedEvent = storedEvents.get(eventId as string);
     expect(eventId?.startsWith('_GET_stream')).toBe(true);
@@ -1020,7 +1045,10 @@ describe("StreamableHTTPServerTransport with resumability", () => {
 
     // Read the notification from the SSE stream
     const reader = sseResponse.body?.getReader();
-    const { value } = await reader!.read();
+    if (!reader) {
+      throw new Error('Reader is undefined');
+    }
+    const { value } = await reader.read();
     const text = new TextDecoder().decode(value);
 
     // Verify the notification was sent with an event ID
@@ -1030,13 +1058,13 @@ describe("StreamableHTTPServerTransport with resumability", () => {
     // Extract the event ID
     const idMatch = text.match(/id: ([^\n]+)/);
     expect(idMatch).toBeTruthy();
-    const firstEventId = idMatch![1];
+    const firstEventId = idMatch?.[1];
 
     // Send a second notification 
     await mcpServer.server.sendLoggingMessage({ level: "info", data: "Second notification from MCP server" });
 
     // Close the first SSE stream to simulate a disconnect
-    await reader!.cancel();
+    await reader?.cancel();
 
     // Reconnect with the Last-Event-ID to get missed messages
     const reconnectResponse = await fetch(baseUrl, {
@@ -1052,8 +1080,8 @@ describe("StreamableHTTPServerTransport with resumability", () => {
 
     // Read the replayed notification
     const reconnectReader = reconnectResponse.body?.getReader();
-    const reconnectData = await reconnectReader!.read();
-    const reconnectText = new TextDecoder().decode(reconnectData.value);
+    const reconnectData = await reconnectReader?.read();
+    const reconnectText = new TextDecoder().decode(reconnectData?.value ?? new Uint8Array());
 
     // Verify we received the second notification that was sent after our stored eventId
     expect(reconnectText).toContain('Second notification from MCP server');

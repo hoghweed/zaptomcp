@@ -1,6 +1,6 @@
 import { Readable, Writable } from "node:stream";
 import { ReadBuffer, serializeMessage } from "../shared/stdio.js";
-import { type JSONRPCMessage } from "../types.js";
+import type { JSONRPCMessage } from "../types.js";
 import { StdioServerTransport } from "./stdio.js";
 import { beforeEach, expect, test } from "vitest";
 
