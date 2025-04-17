@@ -1,4 +1,14 @@
+# ⚠️ Work in Progress
+
+> **Warning**: This repository is currently under active development. The API and implementation details are subject to change. Use at your own risk.
+
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/hoghweed/zaptomcp)](https://github.com/hoghweed/zaptomcp/releases) ![node:20](https://img.shields.io/badge/node-20-lightgreen) ![pnpm@10.8.1](https://img.shields.io/badge/pnpm-10.8.1-yellow) [![npm](https://img.shields.io/npm/dt/@zaptomcp/sdk)](https://www.npmjs.com/package/@zaptomcp/sdk) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue.svg)](https://www.typescriptlang.org/) [![Biome](https://img.shields.io/badge/Biome-1.9.4-ff69b4.svg)](https://biomejs.dev/)
+
 # ZapToMCP
+
+<p align="center">
+ <img align="center" alt="Valkeyrie" height="200" src="assets/logo.png">
+</p>
 
 ZapToMCP is a monorepo containing tools and libraries for building Model Context Protocol (MCP) servers and clients. It provides a streamlined way to create, deploy, and manage MCP-compatible services.
 
