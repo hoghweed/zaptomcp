@@ -11,7 +11,7 @@ interface QueuedMessage {
  * In-memory transport for creating clients and servers that talk to each other within the same process.
  */
 export class InMemoryTransport implements Transport {
-  private _otherTransport?: InMemoryTransport;
+  private _otherTransport?: InMemoryTransport | undefined;
   private _messageQueue: QueuedMessage[] = [];
 
   onclose?: () => void;
@@ -45,6 +45,7 @@ export class InMemoryTransport implements Transport {
 
   async close(): Promise<void> {
     const other = this._otherTransport;
+    this._otherTransport = undefined;
     await other?.close();
     this.onclose?.();
   }
