@@ -1,4 +1,4 @@
-# ZaptoMCP
+# ZapToMCP
 
 ZapToMCP is a monorepo containing tools and libraries for building Model Context Protocol (MCP) servers and clients. It provides a streamlined way to create, deploy, and manage MCP-compatible services.
 
@@ -197,5 +197,10 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Acknowledgments
-- Model Context Protocol - The open standard this project implements
+## Acknowledgements
+
+- ZapToMCP is an inspired porting of [FastMCP](https://github.com/punkpeye/fastmcp)
+- Model Context Protocol [Typescript SDK](https://github.com/modelcontextprotocol/typescript-sdk) - The open standard this project implements
+- FastMCP is inspired by the [Python implementation](https://github.com/jlowin/fastmcp) by [Jonathan Lowin](https://github.com/jlowin).
+- Parts of codebase were adopted from [LiteMCP](https://github.com/wong2/litemcp).
+- Parts of codebase were adopted from [Model Context protocolでSSEをやってみる](https://dev.classmethod.jp/articles/mcp-sse/).
