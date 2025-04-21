@@ -42,6 +42,11 @@
       "import": "./dist/esm/transports/streamable-http.js",
       "require": "./dist/cjs/transports/streamable-http.js"
     },
+    "./types": {
+      "types": "./dist/esm/types.d.ts",
+      "import": "./dist/esm/types.js",
+      "require": "./dist/cjs/types.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {

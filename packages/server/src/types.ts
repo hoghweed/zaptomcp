@@ -1,10 +1,14 @@
 import { z } from "zod";
-import { Server } from "@zaptomcp/sdk/Server";
 import { readFile } from "node:fs/promises";
 import EventEmitter from "node:events";
+import type { IncomingMessage } from "node:http";
 import type { FastMCPSession } from "./session.js";
+import type { Root } from "@zaptomcp/sdk/types";
+import type { StandardSchemaV1 } from "@standard-schema/spec";
+import { fileTypeFromBuffer } from "file-type";
+import type { StrictEventEmitter } from "strict-event-emitter-types";
 
-export type SSEServer = {
+type SSEServer = {
   close: () => Promise<void>;
 };
 
@@ -21,7 +25,7 @@ type FastMCPSessionEvents = {
 /**
  * Generates an image content object from a URL, file path, or buffer.
  */
-export const imageContent = async (
+const imageContent = async (
   input: { url: string } | { path: string } | { buffer: Buffer }
 ): Promise<ImageContent> => {
   let rawData: Buffer;
@@ -63,12 +67,12 @@ type ToolParameters = StandardSchemaV1;
 
 type Literal = boolean | null | number | string | undefined;
 
-export type SerializableValue =
+type SerializableValue =
   | Literal
   | SerializableValue[]
   | { [key: string]: SerializableValue };
 
-export type Progress = {
+type Progress = {
   /**
    * The progress thus far. This should increase every time progress is made, even if the total is unknown.
    */
@@ -132,7 +136,7 @@ const ContentZodSchema = z.discriminatedUnion("type", [
   ImageContentZodSchema,
 ]) satisfies z.ZodType<Content>;
 
-export type ContentResult = {
+type ContentResult = {
   content: Content[];
   isError?: boolean;
 };
@@ -168,7 +172,7 @@ export const CompletionZodSchema = z.object({
   hasMore: z.optional(z.boolean()),
 }) satisfies z.ZodType<Completion>;
 
-export type Tool<
+type Tool<
   T extends FastMCPSessionAuth,
   Params extends ToolParameters = ToolParameters
 > = {
@@ -201,7 +205,7 @@ type ResourceTemplateArgument = Readonly<{
   complete?: ArgumentValueCompleter;
 }>;
 
-export type ResourceTemplate<
+type ResourceTemplate<
   Arguments extends ResourceTemplateArgument[] = ResourceTemplateArgument[]
 > = {
   uriTemplate: string;
@@ -219,7 +223,7 @@ type ResourceTemplateArgumentsToObject<T extends { name: string }[]> = {
   [K in T[number]["name"]]: string;
 };
 
-export type InputResourceTemplate<
+type InputResourceTemplate<
   Arguments extends ResourceTemplateArgument[] = ResourceTemplateArgument[]
 > = {
   uriTemplate: string;
@@ -232,7 +236,7 @@ export type InputResourceTemplate<
   ) => Promise<ResourceResult>;
 };
 
-export type Resource = {
+type Resource = {
   uri: string;
   name: string;
   description?: string;
@@ -241,7 +245,7 @@ export type Resource = {
   complete?: (name: string, value: string) => Promise<Completion>;
 };
 
-export type ArgumentValueCompleter = (value: string) => Promise<Completion>;
+type ArgumentValueCompleter = (value: string) => Promise<Completion>;
 
 type InputPromptArgument = Readonly<{
   name: string;
@@ -261,7 +265,7 @@ type PromptArgumentsToObject<T extends { name: string; required?: boolean }[]> =
       : string | undefined;
   };
 
-export type InputPrompt<
+type InputPrompt<
   Arguments extends InputPromptArgument[] = InputPromptArgument[],
   Args = PromptArgumentsToObject<Arguments>
 > = {
@@ -279,7 +283,7 @@ type PromptArgument = Readonly<{
   enum?: string[];
 }>;
 
-export type Prompt<
+type Prompt<
   Arguments extends PromptArgument[] = PromptArgument[],
   Args = PromptArgumentsToObject<Arguments>
 > = {
@@ -296,7 +300,7 @@ type ServerOptions<T extends FastMCPSessionAuth> = {
   authenticate?: Authenticate<T>;
 };
 
-export type LoggingLevel =
+type LoggingLevel =
   | "debug"
   | "info"
   | "notice"
@@ -310,16 +314,16 @@ const FastMCPSessionEventEmitterBase: {
   new (): StrictEventEmitter<EventEmitter, FastMCPSessionEvents>;
 } = EventEmitter;
 
-export class FastMCPSessionEventEmitter extends FastMCPSessionEventEmitterBase {}
+class FastMCPSessionEventEmitter extends FastMCPSessionEventEmitterBase {}
 
-export type SamplingResponse = {
+type SamplingResponse = {
   model: string;
   stopReason?: "endTurn" | "stopSequence" | "maxTokens" | string;
   role: "user" | "assistant";
-  content: TextContent | ImageContent;
+  content: Content;
 };
 
-export type FastMCPSessionAuth = Record<string, unknown> | undefined;
+type FastMCPSessionAuth = Record<string, unknown> | undefined;
 
 const FastMCPEventEmitterBase: {
   new (): StrictEventEmitter<EventEmitter, FastMCPEvents<FastMCPSessionAuth>>;
@@ -327,15 +331,47 @@ const FastMCPEventEmitterBase: {
 
 class FastMCPEventEmitter extends FastMCPEventEmitterBase {}
 
-type Authenticate<T> = (request: http.IncomingMessage) => Promise<T>;
+type Authenticate<T> = (request: IncomingMessage) => Promise<T>;
 
-export type { Context };
-export type { Tool, ToolParameters };
-export type { Content, TextContent, ImageContent, ContentResult };
-export type { Progress, SerializableValue };
-export type { Resource, ResourceResult };
-export type { ResourceTemplate, ResourceTemplateArgument };
-export type { Prompt, PromptArgument };
-export type { InputPrompt, InputPromptArgument };
-export type { ServerOptions, LoggingLevel };
-export type { FastMCPEvents, FastMCPSessionEvents };
+// Export all types at the bottom
+export type {
+  SSEServer,
+  FastMCPEvents,
+  FastMCPSessionEvents,
+  Extra,
+  Extras,
+  ToolParameters,
+  Literal,
+  SerializableValue,
+  Progress,
+  Context,
+  TextContent,
+  ImageContent,
+  Content,
+  ContentResult,
+  Completion,
+  Tool,
+  ResourceResult,
+  InputResourceTemplateArgument,
+  ResourceTemplateArgument,
+  ResourceTemplate,
+  ResourceTemplateArgumentsToObject,
+  InputResourceTemplate,
+  Resource,
+  ArgumentValueCompleter,
+  InputPromptArgument,
+  PromptArgumentsToObject,
+  InputPrompt,
+  PromptArgument,
+  Prompt,
+  ServerOptions,
+  LoggingLevel,
+  SamplingResponse,
+  FastMCPSessionAuth,
+  Authenticate,
+};
+
+// Export functions and classes
+export { imageContent };
+export { FastMCPSessionEventEmitter };
+export { FastMCPEventEmitter };
