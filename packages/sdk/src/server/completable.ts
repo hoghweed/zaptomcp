@@ -78,7 +78,7 @@ function processCreateParams(params: RawCreateParams): ProcessedCreateParams {
       `Can't use "invalid_type_error" or "required_error" in conjunction with custom error map.`,
     );
   }
-  if (errorMap) return { errorMap: errorMap, description };
+  if (errorMap) return { errorMap: errorMap, ...(description && { description }) };
   const customMap: ZodErrorMap = (iss, ctx) => {
     const { message } = params;
 
@@ -91,5 +91,5 @@ function processCreateParams(params: RawCreateParams): ProcessedCreateParams {
     if (iss.code !== "invalid_type") return { message: ctx.defaultError };
     return { message: message ?? invalid_type_error ?? ctx.defaultError };
   };
-  return { errorMap: customMap, description };
+  return { errorMap: customMap, ...(description && { description }) };
 }
