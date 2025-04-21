@@ -92,7 +92,7 @@ export const JSONRPCNotificationSchema = z
   .strict();
 
 export const isJSONRPCNotification = (
-  value: unknown,
+  value: unknown
 ): value is JSONRPCNotification =>
   JSONRPCNotificationSchema.safeParse(value).success;
 
@@ -124,7 +124,7 @@ export const ErrorCode = {
   MethodNotFound: -32601,
   InvalidParams: -32602,
   InternalError: -32603,
-} as const;
+}
 
 /**
  * A response to a request that indicates an error occurred.
@@ -248,6 +248,10 @@ export const InitializeRequestSchema = RequestSchema.extend({
   }),
 });
 
+export const isInitializeRequest = (value: unknown): value is InitializeRequest =>
+  InitializeRequestSchema.safeParse(value).success;
+
+
 /**
  * Capabilities that a server may support. Known capabilities are defined here, in this schema, but this is not a closed set: any server can define its own, additional capabilities.
  */
@@ -336,6 +340,9 @@ export const InitializeResultSchema = ResultSchema.extend({
 export const InitializedNotificationSchema = NotificationSchema.extend({
   method: z.literal("notifications/initialized"),
 });
+
+export const isInitializedNotification = (value: unknown): value is InitializedNotification =>
+  InitializedNotificationSchema.safeParse(value).success;
 
 /* Ping */
 /**
@@ -789,12 +796,7 @@ export const ListToolsResultSchema = PaginatedResultSchema.extend({
  */
 export const CallToolResultSchema = ResultSchema.extend({
   content: z.array(
-    z.union([
-      TextContentSchema,
-      ImageContentSchema,
-      AudioContentSchema,
-      EmbeddedResourceSchema,
-    ]),
+    z.union([TextContentSchema, ImageContentSchema, AudioContentSchema, EmbeddedResourceSchema]),
   ),
   isError: z.boolean().default(false).optional(),
 });
@@ -918,11 +920,7 @@ export const ModelPreferencesSchema = z
 export const SamplingMessageSchema = z
   .object({
     role: z.enum(["user", "assistant"]),
-    content: z.union([
-      TextContentSchema,
-      ImageContentSchema,
-      AudioContentSchema,
-    ]),
+    content: z.union([TextContentSchema, ImageContentSchema, AudioContentSchema]),
   })
   .passthrough();
 
@@ -976,7 +974,7 @@ export const CreateMessageResultSchema = ResultSchema.extend({
   content: z.discriminatedUnion("type", [
     TextContentSchema,
     ImageContentSchema,
-    AudioContentSchema,
+    AudioContentSchema
   ]),
 });
 
@@ -1153,8 +1151,8 @@ export const ServerResultSchema = z.union([
 ]);
 
 export class McpError extends Error {
-  public readonly code: number
-  public readonly data?: unknown
+  public readonly data?: unknown;
+  public readonly code: number;
 
   constructor(
     code: number,
@@ -1163,8 +1161,8 @@ export class McpError extends Error {
   ) {
     super(`MCP error ${code}: ${message}`);
     this.name = "McpError";
-    this.code = code;
     this.data = data;
+    this.code = code;
   }
 }
 
@@ -1172,14 +1170,14 @@ type Primitive = string | number | boolean | bigint | null | undefined;
 type Flatten<T> = T extends Primitive
   ? T
   : T extends Array<infer U>
-    ? Array<Flatten<U>>
-    : T extends Set<infer U>
-      ? Set<Flatten<U>>
-      : T extends Map<infer K, infer V>
-        ? Map<Flatten<K>, Flatten<V>>
-        : T extends object
-          ? { [K in keyof T]: Flatten<T[K]> }
-          : T;
+  ? Array<Flatten<U>>
+  : T extends Set<infer U>
+  ? Set<Flatten<U>>
+  : T extends Map<infer K, infer V>
+  ? Map<Flatten<K>, Flatten<V>>
+  : T extends object
+  ? { [K in keyof T]: Flatten<T[K]> }
+  : T;
 
 type Infer<Schema extends ZodTypeAny> = Flatten<z.infer<Schema>>;
 
@@ -1208,9 +1206,7 @@ export type ClientCapabilities = Infer<typeof ClientCapabilitiesSchema>;
 export type InitializeRequest = Infer<typeof InitializeRequestSchema>;
 export type ServerCapabilities = Infer<typeof ServerCapabilitiesSchema>;
 export type InitializeResult = Infer<typeof InitializeResultSchema>;
-export type InitializedNotification = Infer<
-  typeof InitializedNotificationSchema
->;
+export type InitializedNotification = Infer<typeof InitializedNotificationSchema>;
 
 /* Ping */
 export type PingRequest = Infer<typeof PingRequestSchema>;
@@ -1231,22 +1227,14 @@ export type Resource = Infer<typeof ResourceSchema>;
 export type ResourceTemplate = Infer<typeof ResourceTemplateSchema>;
 export type ListResourcesRequest = Infer<typeof ListResourcesRequestSchema>;
 export type ListResourcesResult = Infer<typeof ListResourcesResultSchema>;
-export type ListResourceTemplatesRequest = Infer<
-  typeof ListResourceTemplatesRequestSchema
->;
-export type ListResourceTemplatesResult = Infer<
-  typeof ListResourceTemplatesResultSchema
->;
+export type ListResourceTemplatesRequest = Infer<typeof ListResourceTemplatesRequestSchema>;
+export type ListResourceTemplatesResult = Infer<typeof ListResourceTemplatesResultSchema>;
 export type ReadResourceRequest = Infer<typeof ReadResourceRequestSchema>;
 export type ReadResourceResult = Infer<typeof ReadResourceResultSchema>;
-export type ResourceListChangedNotification = Infer<
-  typeof ResourceListChangedNotificationSchema
->;
+export type ResourceListChangedNotification = Infer<typeof ResourceListChangedNotificationSchema>;
 export type SubscribeRequest = Infer<typeof SubscribeRequestSchema>;
 export type UnsubscribeRequest = Infer<typeof UnsubscribeRequestSchema>;
-export type ResourceUpdatedNotification = Infer<
-  typeof ResourceUpdatedNotificationSchema
->;
+export type ResourceUpdatedNotification = Infer<typeof ResourceUpdatedNotificationSchema>;
 
 /* Prompts */
 export type PromptArgument = Infer<typeof PromptArgumentSchema>;
@@ -1260,29 +1248,21 @@ export type AudioContent = Infer<typeof AudioContentSchema>;
 export type EmbeddedResource = Infer<typeof EmbeddedResourceSchema>;
 export type PromptMessage = Infer<typeof PromptMessageSchema>;
 export type GetPromptResult = Infer<typeof GetPromptResultSchema>;
-export type PromptListChangedNotification = Infer<
-  typeof PromptListChangedNotificationSchema
->;
+export type PromptListChangedNotification = Infer<typeof PromptListChangedNotificationSchema>;
 
 /* Tools */
 export type Tool = Infer<typeof ToolSchema>;
 export type ListToolsRequest = Infer<typeof ListToolsRequestSchema>;
 export type ListToolsResult = Infer<typeof ListToolsResultSchema>;
 export type CallToolResult = Infer<typeof CallToolResultSchema>;
-export type CompatibilityCallToolResult = Infer<
-  typeof CompatibilityCallToolResultSchema
->;
+export type CompatibilityCallToolResult = Infer<typeof CompatibilityCallToolResultSchema>;
 export type CallToolRequest = Infer<typeof CallToolRequestSchema>;
-export type ToolListChangedNotification = Infer<
-  typeof ToolListChangedNotificationSchema
->;
+export type ToolListChangedNotification = Infer<typeof ToolListChangedNotificationSchema>;
 
 /* Logging */
 export type LoggingLevel = Infer<typeof LoggingLevelSchema>;
 export type SetLevelRequest = Infer<typeof SetLevelRequestSchema>;
-export type LoggingMessageNotification = Infer<
-  typeof LoggingMessageNotificationSchema
->;
+export type LoggingMessageNotification = Infer<typeof LoggingMessageNotificationSchema>;
 
 /* Sampling */
 export type SamplingMessage = Infer<typeof SamplingMessageSchema>;
@@ -1299,9 +1279,7 @@ export type CompleteResult = Infer<typeof CompleteResultSchema>;
 export type Root = Infer<typeof RootSchema>;
 export type ListRootsRequest = Infer<typeof ListRootsRequestSchema>;
 export type ListRootsResult = Infer<typeof ListRootsResultSchema>;
-export type RootsListChangedNotification = Infer<
-  typeof RootsListChangedNotificationSchema
->;
+export type RootsListChangedNotification = Infer<typeof RootsListChangedNotificationSchema>;
 
 /* Client messages */
 export type ClientRequest = Infer<typeof ClientRequestSchema>;
