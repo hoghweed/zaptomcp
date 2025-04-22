@@ -243,8 +243,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       xsschema:
-        specifier: 0.2.0-beta.2
-        version: 0.2.0-beta.2(zod-to-json-schema@3.24.5(zod@3.24.3))
+        specifier: 0.2.0-beta.3
+        version: 0.2.0-beta.3(zod-to-json-schema@3.24.5(zod@3.24.3))
       zod:
         specifier: ^3.24.3
         version: 3.24.3
@@ -3361,12 +3361,12 @@ packages:
     resolution: {integrity: sha512-FdNA4RyH1L43TlvGG8qOMIfcEczwA5ij+zLXUy3Z83CjxhLvcV7/Q/8pk22wnCgYw7PJhtK+7lhO+qqyT4NdvQ==}
     engines: {node: '>=16.14'}
 
-  xsschema@0.2.0-beta.2:
-    resolution: {integrity: sha512-yaU1SLQVQNboZHHK7iXpCoHzF+sbWvkygAKG6qMKvnpbNdm0SMWAIIj1uasDpCQ21HspPTdEYGg0c0qZYXVQFg==}
+  xsschema@0.2.0-beta.3:
+    resolution: {integrity: sha512-ViOZ1a1kAPHvFjDJp4ITeutdlbnEs56lx/NotlvcitwN04eHnU3DhR+P5GvXT7A+69qKrXAx0YrccvmfwGnUGw==}
     peerDependencies:
       '@valibot/to-json-schema': ^1.0.0
-      arktype: ^2.1.13
-      effect: ^3.14.2
+      arktype: ^2.1.16
+      effect: ^3.14.5
       zod-to-json-schema: ^3.24.5
     peerDependenciesMeta:
       '@valibot/to-json-schema':
@@ -6734,7 +6734,7 @@ snapshots:
       js-yaml: 4.1.0
       write-file-atomic: 5.0.1
 
-  xsschema@0.2.0-beta.2(zod-to-json-schema@3.24.5(zod@3.24.3)):
+  xsschema@0.2.0-beta.3(zod-to-json-schema@3.24.5(zod@3.24.3)):
     optionalDependencies:
       zod-to-json-schema: 3.24.5(zod@3.24.3)
 
