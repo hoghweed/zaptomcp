@@ -293,7 +293,7 @@ export class FastMCPSession<
   }
 
   private setupErrorHandling() {
-    this.#server.onerror = (error) => {
+    this.#server.onerror = (error: Error) => {
       console.error("[MCP Error]", error);
     };
   }

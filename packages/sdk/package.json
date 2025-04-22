@@ -12,32 +12,52 @@
       "import": "./dist/esm/server/mcp-server.js",
       "require": "./dist/cjs/server/mcp-server.js"
     },
-    "./Server": {
+    "./client": {
+      "types": "./dist/esm/client/client.d.ts",
+      "import": "./dist/esm/client/client.js",
+      "require": "./dist/cjs/client/client.js"
+    },
+    "./client/transports/stdio": {
+      "types": "./dist/esm/client/transports/stdio.d.ts",
+      "import": "./dist/esm/client/transports/stdio.js",
+      "require": "./dist/cjs/client/transports/stdio.js"
+    },
+    "./client/transports/streamable-http": {
+      "types": "./dist/esm/client/transports/streamable-http.d.ts",
+      "import": "./dist/esm/client/transports/streamable-http.js",
+      "require": "./dist/cjs/client/transports/streamable-http.js"
+    },
+    "./client/transports/sse": {
+      "types": "./dist/esm/client/transports/sse.d.ts",
+      "import": "./dist/esm/client/transports/sse.js",
+      "require": "./dist/cjs/client/transports/sse.js"
+    },
+    "./server": {
       "types": "./dist/esm/server/server.d.ts",
       "import": "./dist/esm/server/server.js",
       "require": "./dist/cjs/server/server.js"
     },
-    "./transports": {
+    "./server/transports": {
       "types": "./dist/esm/transports/transport.d.ts",
       "import": "./dist/esm/transports/transport.js",
       "require": "./dist/cjs/transports/transport.js"
     },
-    "./transports/in-memory": {
+    "./server/transports/in-memory": {
       "types": "./dist/esm/transports/in-memory.d.ts",
       "import": "./dist/esm/transports/in-memory.js",
       "require": "./dist/cjs/transports/in-memory.js"
     },
-    "./transports/sse": {
+    "./server/transports/sse": {
       "types": "./dist/esm/transports/sse.d.ts",
       "import": "./dist/esm/transports/sse.js",
       "require": "./dist/cjs/transports/sse.js"
     },
-    "./transports/stdio": {
+    "./server/transports/stdio": {
       "types": "./dist/esm/transports/stdio.d.ts",
       "import": "./dist/esm/transports/stdio.js",
       "require": "./dist/cjs/transports/stdio.js"
     },
-    "./transports/streamable-http": {
+    "./server/transports/streamable-http": {
       "types": "./dist/esm/transports/streamable-http.d.ts",
       "import": "./dist/esm/transports/streamable-http.js",
       "require": "./dist/cjs/transports/streamable-http.js"

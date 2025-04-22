@@ -69,7 +69,7 @@ export type ServerOptions = ProtocolOptions & {
 export class Server<
   RequestT extends Request = Request,
   NotificationT extends Notification = Notification,
-  ResultT extends Result = Result,
+  ResultT extends Result = Result
 > extends Protocol<
   ServerRequest | RequestT,
   ServerNotification | NotificationT,
@@ -88,23 +88,26 @@ export class Server<
   /**
    * Initializes this server with the given name and version information.
    */
-  constructor(
-    serverInfo: Implementation,
-    options?: ServerOptions,
-  ) {
+  constructor(serverInfo: Implementation, options?: ServerOptions) {
     super(options);
     this._serverInfo = serverInfo;
     this._capabilities = options?.capabilities ?? {};
     this._instructions = options?.instructions;
 
     this.setRequestHandler(InitializeRequestSchema, (request) =>
-      this._oninitialize(request),
+      this._oninitialize(request)
     );
     this.setNotificationHandler(InitializedNotificationSchema, () =>
-      this.oninitialized?.(),
+      this.oninitialized?.()
     );
   }
 
+  /**
+   * The server's name and version.
+   */
+  getVersion(): { readonly name: string; readonly version: string } {
+    return this._serverInfo;
+  }
   /**
    * Registers new capabilities. This can only be called before connecting to a transport.
    *
@@ -113,7 +116,7 @@ export class Server<
   public registerCapabilities(capabilities: ServerCapabilities): void {
     if (this.transport) {
       throw new Error(
-        "Cannot register capabilities after connecting to transport",
+        "Cannot register capabilities after connecting to transport"
       );
     }
 
@@ -125,7 +128,7 @@ export class Server<
       case "sampling/createMessage":
         if (!this._clientCapabilities?.sampling) {
           throw new Error(
-            `Client does not support sampling (required for ${method})`,
+            `Client does not support sampling (required for ${method})`
           );
         }
         break;
@@ -133,7 +136,7 @@ export class Server<
       case "roots/list":
         if (!this._clientCapabilities?.roots) {
           throw new Error(
-            `Client does not support listing roots (required for ${method})`,
+            `Client does not support listing roots (required for ${method})`
           );
         }
         break;
@@ -145,13 +148,13 @@ export class Server<
   }
 
   protected assertNotificationCapability(
-    method: (ServerNotification | NotificationT)["method"],
+    method: (ServerNotification | NotificationT)["method"]
   ): void {
     switch (method as ServerNotification["method"]) {
       case "notifications/message":
         if (!this._capabilities.logging) {
           throw new Error(
-            `Server does not support logging (required for ${method})`,
+            `Server does not support logging (required for ${method})`
           );
         }
         break;
@@ -160,7 +163,7 @@ export class Server<
       case "notifications/resources/list_changed":
         if (!this._capabilities.resources) {
           throw new Error(
-            `Server does not support notifying about resources (required for ${method})`,
+            `Server does not support notifying about resources (required for ${method})`
           );
         }
         break;
@@ -168,7 +171,7 @@ export class Server<
       case "notifications/tools/list_changed":
         if (!this._capabilities.tools) {
           throw new Error(
-            `Server does not support notifying of tool list changes (required for ${method})`,
+            `Server does not support notifying of tool list changes (required for ${method})`
           );
         }
         break;
@@ -176,7 +179,7 @@ export class Server<
       case "notifications/prompts/list_changed":
         if (!this._capabilities.prompts) {
           throw new Error(
-            `Server does not support notifying of prompt list changes (required for ${method})`,
+            `Server does not support notifying of prompt list changes (required for ${method})`
           );
         }
         break;
@@ -196,7 +199,7 @@ export class Server<
       case "sampling/createMessage":
         if (!this._capabilities.sampling) {
           throw new Error(
-            `Server does not support sampling (required for ${method})`,
+            `Server does not support sampling (required for ${method})`
           );
         }
         break;
@@ -204,7 +207,7 @@ export class Server<
       case "logging/setLevel":
         if (!this._capabilities.logging) {
           throw new Error(
-            `Server does not support logging (required for ${method})`,
+            `Server does not support logging (required for ${method})`
           );
         }
         break;
@@ -213,7 +216,7 @@ export class Server<
       case "prompts/list":
         if (!this._capabilities.prompts) {
           throw new Error(
-            `Server does not support prompts (required for ${method})`,
+            `Server does not support prompts (required for ${method})`
           );
         }
         break;
@@ -223,7 +226,7 @@ export class Server<
       case "resources/read":
         if (!this._capabilities.resources) {
           throw new Error(
-            `Server does not support resources (required for ${method})`,
+            `Server does not support resources (required for ${method})`
           );
         }
         break;
@@ -232,7 +235,7 @@ export class Server<
       case "tools/list":
         if (!this._capabilities.tools) {
           throw new Error(
-            `Server does not support tools (required for ${method})`,
+            `Server does not support tools (required for ${method})`
           );
         }
         break;
@@ -245,7 +248,7 @@ export class Server<
   }
 
   private async _oninitialize(
-    request: InitializeRequest,
+    request: InitializeRequest
   ): Promise<InitializeResult> {
     const requestedVersion = request.params.protocolVersion;
 
@@ -286,23 +289,23 @@ export class Server<
 
   async createMessage(
     params: CreateMessageRequest["params"],
-    options?: RequestOptions,
+    options?: RequestOptions
   ) {
     return this.request(
       { method: "sampling/createMessage", params },
       CreateMessageResultSchema,
-      options,
+      options
     );
   }
 
   async listRoots(
     params?: ListRootsRequest["params"],
-    options?: RequestOptions,
+    options?: RequestOptions
   ) {
     return this.request(
       { method: "roots/list", params },
       ListRootsResultSchema,
-      options,
+      options
     );
   }
 

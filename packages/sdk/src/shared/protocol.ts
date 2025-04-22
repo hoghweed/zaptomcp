@@ -22,7 +22,8 @@ import {
   type Result,
   type ServerCapabilities,
 } from "../types.js";
-import type { Transport } from "../transports/transport.js";
+import type { Transport, TransportSendOptions } from "../transports/transport.js";
+import type { AuthInfo } from "../server/auth/types.js";
 
 /**
  * Callback for progress notifications.
@@ -87,7 +88,7 @@ export type RequestOptions = {
    * May be used to indicate to the transport which incoming request to associate this outgoing request with.
    */
   relatedRequestId?: RequestId;
-};
+}  & TransportSendOptions;
 
 /**
  * Options that can be given per notification.
@@ -102,39 +103,37 @@ export type NotificationOptions = {
 /**
  * Extra data given to request handlers.
  */
-export type RequestHandlerExtra<
-  SendRequestT extends Request,
-  SendNotificationT extends Notification,
-> = {
-  /**
-   * An abort signal used to communicate if the request was cancelled from the sender's side.
-   */
-  signal: AbortSignal;
+export type RequestHandlerExtra<SendRequestT extends Request,
+  SendNotificationT extends Notification> = {
+    /**
+     * An abort signal used to communicate if the request was cancelled from the sender's side.
+     */
+    signal: AbortSignal;
 
-  /**
-   * The session ID from the transport, if available.
-   */
-  sessionId?: string | undefined;
+    /**
+     * Information about a validated access token, provided to request handlers.
+     */
+    authInfo?: AuthInfo | undefined;
 
-  /**
-   * Sends a notification that relates to the current request being handled.
-   *
-   * This is used by certain transports to correctly associate related messages.
-   */
-  sendNotification: (notification: SendNotificationT) => Promise<void>;
+    /**
+     * The session ID from the transport, if available.
+     */
+    sessionId?: string | undefined;
 
-  /**
-   * Sends a request that relates to the current request being handled.
-   *
-   * This is used by certain transports to correctly associate related messages.
-   */
-  sendRequest: <U extends ZodType<object>>(
-    request: SendRequestT,
-    resultSchema: U,
-    options?: RequestOptions,
-  ) => Promise<z.infer<U>>;
-};
+    /**
+     * Sends a notification that relates to the current request being handled.
+     * 
+     * This is used by certain transports to correctly associate related messages.
+     */
+    sendNotification: (notification: SendNotificationT) => Promise<void>;
 
+    /**
+     * Sends a request that relates to the current request being handled.
+     * 
+     * This is used by certain transports to correctly associate related messages.
+     */
+    sendRequest: <U extends ZodType<object>>(request: SendRequestT, resultSchema: U, options?: RequestOptions) => Promise<z.infer<U>>;
+  };
 /**
  * Information about a request's timeout state
  */
