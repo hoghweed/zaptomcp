@@ -1,6 +1,6 @@
 import { FastMCPEventEmitter } from "./types.js";
 
-import { StdioServerTransport } from "@zaptomcp/sdk/transports/stdio";
+import { StdioServerTransport } from "@zaptomcp/sdk/server/transports/stdio";
 import { FastMCPSession } from "./session.js";
 import type { Authenticate, InputPrompt, InputPromptArgument, InputResourceTemplate, InputResourceTemplateArgument, Resource, ServerOptions, SSEServer, Tool, ToolParameters } from "./types.js";
 import { startSSEServer } from "mcp-proxy";

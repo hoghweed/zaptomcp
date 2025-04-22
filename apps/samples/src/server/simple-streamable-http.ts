@@ -3,11 +3,10 @@ import { McpServer } from "@zaptomcp/sdk";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { StreamableHTTPServerTransport } from "@zaptomcp/sdk/server/transports/streamable-http";
-import {
-  type CallToolResult,
-  type GetPromptResult,
-  isInitializeRequest,
-  type ReadResourceResult,
+import type {
+  CallToolResult,
+  GetPromptResult,
+  ReadResourceResult,
 } from "@zaptomcp/sdk/types";
 import { InMemoryEventStore } from "../shared/in-memory-eventstore.js";
 import {
@@ -243,10 +242,11 @@ app.withTypeProvider<ZodTypeProvider>().post("/mcp", async (req, res) => {
     // Handle the request with existing transport - no need to reconnect
     // The existing transport is already connected to the server
     await transport.handleRequest(req.raw, res.raw, req.body);
+    return;
   } catch (error) {
     console.error("Error handling MCP request:", error);
+    res.statusCode = 500;
     if (!res.raw.headersSent) {
-      res.statusCode = 500;
       return {
         jsonrpc: "2.0",
         error: {
@@ -256,6 +256,8 @@ app.withTypeProvider<ZodTypeProvider>().post("/mcp", async (req, res) => {
         id: null,
       };
     }
+
+    return;
   }
 });
 

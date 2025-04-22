@@ -14,13 +14,17 @@ export class MultiServerMCPClient {
   private clients: Map<string, Client> = new Map();
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   private tools: Record<string, any> = {};
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  private serverConfigs: Record<string, any>;
 
   /**
    * Constructor for MultiServerMCPClient
    * @param serverConfigs - Configuration for each server
    */
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  constructor(private serverConfigs: Record<string, any>) {}
+  constructor(serverConfigs: Record<string, any>) {
+    this.serverConfigs = serverConfigs;
+  }
 
   /**
    * Initialize connections to all configured servers
@@ -31,7 +35,6 @@ export class MultiServerMCPClient {
         name: "example-client",
         version: "1.0.0",
       });
-      // biome-ignore lint/style/useConst: <explanation>
       let sessionId: string | undefined = undefined;
 
       if (config.transport === "stdio") {

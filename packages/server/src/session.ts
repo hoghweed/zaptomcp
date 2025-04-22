@@ -38,11 +38,11 @@ import {
   type Root,
   type ServerCapabilities,
 } from "@zaptomcp/sdk/types";
-import { Server } from "@zaptomcp/sdk/Server";
+import { Server } from "@zaptomcp/sdk/server";
 import parseURITemplate from "uri-templates";
 import Fuse from "fuse.js";
 import { UnexpectedStateError, UserError } from "./errors.js";
-import type { Transport } from "@zaptomcp/sdk/transports";
+import type { Transport } from "@zaptomcp/sdk/server/transports";
 import { toJsonSchema } from "xsschema";
 
 export class FastMCPSession<
