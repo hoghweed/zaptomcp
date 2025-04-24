@@ -2,7 +2,7 @@ import { z } from "zod";
 import { readFile } from "node:fs/promises";
 import EventEmitter from "node:events";
 import type { IncomingMessage } from "node:http";
-import type { FastMCPSession } from "./session.js";
+import type { ZapMCPSession } from "./session.js";
 import type { Root } from "@zaptomcp/sdk/types";
 import type { StandardSchemaV1 } from "@standard-schema/spec";
 import { fileTypeFromBuffer } from "file-type";
@@ -12,12 +12,12 @@ type SSEServer = {
   close: () => Promise<void>;
 };
 
-type FastMCPEvents<T extends FastMCPSessionAuth> = {
-  connect: (event: { session: FastMCPSession<T> }) => void;
-  disconnect: (event: { session: FastMCPSession<T> }) => void;
+type ZapMCPEvents<T extends ZapMCPSessionAuth> = {
+  connect: (event: { session: ZapMCPSession<T> }) => void;
+  disconnect: (event: { session: ZapMCPSession<T> }) => void;
 };
 
-type FastMCPSessionEvents = {
+type ZapMCPSessionEvents = {
   rootsChanged: (event: { roots: Root[] }) => void;
   error: (event: { error: Error }) => void;
 };
@@ -83,7 +83,7 @@ type Progress = {
   total?: number;
 };
 
-type Context<T extends FastMCPSessionAuth> = {
+type Context<T extends ZapMCPSessionAuth> = {
   session: T | undefined;
   reportProgress: (progress: Progress) => Promise<void>;
   log: {
@@ -173,7 +173,7 @@ export const CompletionZodSchema = z.object({
 }) satisfies z.ZodType<Completion>;
 
 type Tool<
-  T extends FastMCPSessionAuth,
+  T extends ZapMCPSessionAuth,
   Params extends ToolParameters = ToolParameters
 > = {
   name: string;
@@ -294,7 +294,7 @@ type Prompt<
   name: string;
 };
 
-type ServerOptions<T extends FastMCPSessionAuth> = {
+type ServerOptions<T extends ZapMCPSessionAuth> = {
   name: string;
   version: `${number}.${number}.${number}`;
   authenticate?: Authenticate<T>;
@@ -311,10 +311,10 @@ type LoggingLevel =
   | "emergency";
 
 const FastMCPSessionEventEmitterBase: {
-  new (): StrictEventEmitter<EventEmitter, FastMCPSessionEvents>;
+  new (): StrictEventEmitter<EventEmitter, ZapMCPSessionEvents>;
 } = EventEmitter;
 
-class FastMCPSessionEventEmitter extends FastMCPSessionEventEmitterBase {}
+class ZapMCPSessionEventEmitter extends FastMCPSessionEventEmitterBase {}
 
 type SamplingResponse = {
   model: string;
@@ -323,21 +323,21 @@ type SamplingResponse = {
   content: Content;
 };
 
-type FastMCPSessionAuth = Record<string, unknown> | undefined;
+type ZapMCPSessionAuth = Record<string, unknown> | undefined;
 
-const FastMCPEventEmitterBase: {
-  new (): StrictEventEmitter<EventEmitter, FastMCPEvents<FastMCPSessionAuth>>;
+const ZapMCPEventEmitterBase: {
+  new (): StrictEventEmitter<EventEmitter, ZapMCPEvents<ZapMCPSessionAuth>>;
 } = EventEmitter;
 
-class FastMCPEventEmitter extends FastMCPEventEmitterBase {}
+class ZapMCPEventEmitter extends ZapMCPEventEmitterBase {}
 
 type Authenticate<T> = (request: IncomingMessage) => Promise<T>;
 
 // Export all types at the bottom
 export type {
   SSEServer,
-  FastMCPEvents,
-  FastMCPSessionEvents,
+  ZapMCPEvents,
+  ZapMCPSessionEvents,
   Extra,
   Extras,
   ToolParameters,
@@ -367,11 +367,11 @@ export type {
   ServerOptions,
   LoggingLevel,
   SamplingResponse,
-  FastMCPSessionAuth,
+  ZapMCPSessionAuth,
   Authenticate,
 };
 
 // Export functions and classes
 export { imageContent };
-export { FastMCPSessionEventEmitter };
-export { FastMCPEventEmitter };
+export { ZapMCPSessionEventEmitter };
+export { ZapMCPEventEmitter };

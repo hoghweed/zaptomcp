@@ -1,8 +1,8 @@
 import type { z } from "zod";
 import { setTimeout as delay } from "node:timers/promises";
 import {
-  type FastMCPSessionAuth,
-  FastMCPSessionEventEmitter,
+  type ZapMCPSessionAuth,
+  ZapMCPSessionEventEmitter,
   type LoggingLevel,
   type Prompt,
   type Resource,
@@ -45,9 +45,9 @@ import { UnexpectedStateError, UserError } from "./errors.js";
 import type { Transport } from "@zaptomcp/sdk/server/transports";
 import { toJsonSchema } from "xsschema";
 
-export class FastMCPSession<
-  T extends FastMCPSessionAuth = FastMCPSessionAuth
-> extends FastMCPSessionEventEmitter {
+export class ZapMCPSession<
+  T extends ZapMCPSessionAuth = ZapMCPSessionAuth
+> extends ZapMCPSessionEventEmitter {
   #capabilities: ServerCapabilities = {};
   #clientCapabilities?: ClientCapabilities;
   #loggingLevel: LoggingLevel = "info";

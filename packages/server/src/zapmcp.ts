@@ -1,16 +1,16 @@
-import { FastMCPEventEmitter } from "./types.js";
+import { ZapMCPEventEmitter } from "./types.js";
 
 import { StdioServerTransport } from "@zaptomcp/sdk/server/transports/stdio";
-import { FastMCPSession } from "./session.js";
+import { ZapMCPSession } from "./session.js";
 import type { Authenticate, InputPrompt, InputPromptArgument, InputResourceTemplate, InputResourceTemplateArgument, Resource, ServerOptions, SSEServer, Tool, ToolParameters } from "./types.js";
 import { startSSEServer } from "mcp-proxy";
 
-export class ZapMCP<T extends Record<string, unknown> | undefined = undefined> extends FastMCPEventEmitter {
+export class ZapMCP<T extends Record<string, unknown> | undefined = undefined> extends ZapMCPEventEmitter {
     #options: ServerOptions<T>;
     #prompts: InputPrompt[] = [];
     #resources: Resource[] = [];
     #resourcesTemplates: InputResourceTemplate[] = [];
-    #sessions: FastMCPSession<T>[] = [];
+    #sessions: ZapMCPSession<T>[] = [];
     #sseServer: SSEServer | null = null;
     #tools: Tool<T>[] = [];
     #authenticate: Authenticate<T> | undefined;
@@ -22,7 +22,7 @@ export class ZapMCP<T extends Record<string, unknown> | undefined = undefined> e
       this.#authenticate = options.authenticate;
     }
   
-    public get sessions(): FastMCPSession<T>[] {
+    public get sessions(): ZapMCPSession<T>[] {
       return this.#sessions;
     }
   
@@ -74,7 +74,7 @@ export class ZapMCP<T extends Record<string, unknown> | undefined = undefined> e
       if (options.transportType === "stdio") {
         const transport = new StdioServerTransport();
   
-        const session = new FastMCPSession<T>({
+        const session = new ZapMCPSession<T>({
           name: this.#options.name,
           version: this.#options.version,
           tools: this.#tools,
@@ -92,7 +92,7 @@ export class ZapMCP<T extends Record<string, unknown> | undefined = undefined> e
         });
   
       } else if (options.transportType === "sse") {
-        this.#sseServer = await startSSEServer<FastMCPSession<T>>({
+        this.#sseServer = await startSSEServer<ZapMCPSession<T>>({
           endpoint: options.sse.endpoint as `/${string}`,
           port: options.sse.port,
           createServer: async (request) => {
@@ -102,7 +102,7 @@ export class ZapMCP<T extends Record<string, unknown> | undefined = undefined> e
               auth = await this.#authenticate(request);
             }
   
-            return new FastMCPSession<T>({
+            return new ZapMCPSession<T>({
               auth,
               name: this.#options.name,
               version: this.#options.version,
